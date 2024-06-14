@@ -9,7 +9,6 @@ class ConstantFunction {
     String api =
         'https://api.edamam.com/search?q=$findrecipe&app_id=$id&app_key=$key&health=alcohol-free';
     final response = await http.get(Uri.parse(api));
-
     List<Map<String, dynamic>> recipes = [];
 
     if (response.statusCode == 200) {

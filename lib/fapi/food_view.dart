@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:dieter/fapi/constant_function.dart';
 
 import '../auth.dart';
+import 'nutrient_data.dart';
 
 class FoodView extends StatefulWidget {
   const FoodView({Key? key}) : super(key: key);
@@ -51,6 +52,18 @@ class _FoodViewState extends State<FoodView> {
           ((recipe['totalNutrients']['CHOCDF']['quantity'] / originalWeight) *
                   enteredWeight)
               .toStringAsFixed(2);
+      final fiber =
+          ((recipe['totalNutrients']['FIBTG']['quantity'] / originalWeight) *
+                  enteredWeight)
+              .toStringAsFixed(2);
+      final sugar =
+          ((recipe['totalNutrients']['SUGAR']['quantity'] / originalWeight) *
+                  enteredWeight)
+              .toStringAsFixed(2);
+      final sodium =
+          ((recipe['totalNutrients']['NA']['quantity'] / originalWeight) *
+                  enteredWeight)
+              .toStringAsFixed(2);
 
       // Store the calculated values in Firebase Firestore
       final userUid = user?.uid;
@@ -60,17 +73,21 @@ class _FoodViewState extends State<FoodView> {
 
       try {
         await mealTrackerRef.add({
+          'recipeName': recipe['label'] ?? 'Unknown Recipe',
           'calories': calories,
           'protein': protein,
           'fat': fat,
           'carbs': carbs,
+          'fiber': fiber,
+          'sugar': sugar,
+          'sodium': sodium,
           'timestamp': FieldValue.serverTimestamp(),
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Calculated Values Saved:\nCalories: $calories\nProtein: $protein g\nFat: $fat g\nCarbs: $carbs g'),
+                'Calculated Values Saved:\nCalories: $calories\nProtein: $protein g\nFat: $fat g\nCarbs: $carbs g\nFiber: $fiber g\nSugar: $sugar g\nSodium: $sodium g'),
             duration: Duration(seconds: 5),
           ),
         );
@@ -93,11 +110,61 @@ class _FoodViewState extends State<FoodView> {
         : 'N/A'; // Format the value to two decimal places
   }
 
+  void _showNutrientsDialog(Map<String, dynamic> recipe) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(recipe['label'] ?? 'No Title'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Calories: ${_formatNutrientValue(recipe['calories'])}'),
+              Text(
+                  'Protein: ${_formatNutrientValue(recipe['totalNutrients']['PROCNT']['quantity'])}g'),
+              Text(
+                  'Fat: ${_formatNutrientValue(recipe['totalNutrients']['FAT']['quantity'])}g'),
+              Text(
+                  'Carbs: ${_formatNutrientValue(recipe['totalNutrients']['CHOCDF']['quantity'])}g'),
+              Text(
+                  'Fiber: ${_formatNutrientValue(recipe['totalNutrients']['FIBTG']['quantity'])}g'),
+              Text(
+                  'Sugar: ${_formatNutrientValue(recipe['totalNutrients']['SUGAR']['quantity'])}g'),
+              Text(
+                  'Sodium: ${_formatNutrientValue(recipe['totalNutrients']['NA']['quantity'])}g'),
+              Text('Weight: ${_formatNutrientValue(recipe['totalWeight'])}g'),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Recipes'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SavedDataPage()),
+              );
+            },
+            icon: Icon(Icons.arrow_circle_right),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -179,7 +246,7 @@ class _FoodViewState extends State<FoodView> {
                                           ),
                                         ),
                                         IconButton(
-                                          icon: Icon(Icons.calculate),
+                                          icon: Icon(Icons.add),
                                           onPressed: () => _calculateNutrition(
                                               recipe, index),
                                         ),
@@ -188,16 +255,10 @@ class _FoodViewState extends State<FoodView> {
                                   ),
                                 ],
                               ),
-                              Text(
-                                  'Calories: ${_formatNutrientValue(recipe['calories'])}'),
-                              Text(
-                                  'Protein: ${_formatNutrientValue(recipe['totalNutrients']['PROCNT']['quantity'])}g'),
-                              Text(
-                                  'Fat: ${_formatNutrientValue(recipe['totalNutrients']['FAT']['quantity'])}g'),
-                              Text(
-                                  'Carbs: ${_formatNutrientValue(recipe['totalNutrients']['CHOCDF']['quantity'])}g'),
-                              Text(
-                                  'Weight: ${_formatNutrientValue(recipe['totalWeight'])}g'),
+                              ElevatedButton(
+                                onPressed: () => _showNutrientsDialog(recipe),
+                                child: Text('Show Nutrients'),
+                              ),
                             ],
                           ),
                         ),
