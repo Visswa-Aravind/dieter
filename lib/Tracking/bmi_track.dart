@@ -36,32 +36,46 @@ class _BmiTrackingState extends State<BmiTracking> {
     super.dispose();
   }
 
-  void calculateAndStoreBMI() {
-    double height = double.tryParse(_heightController.text) ?? 0.0;
-    double weight = double.tryParse(_weightController.text) ?? 0.0;
+  Future<void> _calculateAndStoreData() async {
+    if (_isBmiCalculation) {
+      await _calculateAndStoreBMI();
+    } else {
+      await _calculateAndStoreWaistHipRatio();
+    }
+  }
+
+  Future<void> _calculateAndStoreBMI() async {
+    final height = double.tryParse(_heightController.text) ?? 0.0;
+    final weight = double.tryParse(_weightController.text) ?? 0.0;
 
     if (height > 0 && weight > 0) {
-      // Calculate BMI
       setState(() {
         _bmi = weight / ((height / 100) * (height / 100));
       });
 
-      // Store in Firestore
-      CollectionReference cf = FirebaseFirestore.instance.collection('Tracker');
+      try {
+        final userUid = user?.uid;
+        final cf = FirebaseFirestore.instance
+            .collection('Personals')
+            .doc(userUid)
+            .collection('Tracker');
+        await cf.add({
+          'uid': user?.uid,
+          'email': user?.email,
+          'weight': weight,
+          'height': height,
+          'bmi': _bmi,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
 
-      cf.add({
-        'uid': user?.uid,
-        'email': user?.email,
-        'weight': weight,
-        'height': height,
-        'bmi': _bmi,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-
-      // Show BMI result
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('BMI: ${_bmi!.toStringAsFixed(2)}')),
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('BMI: ${_bmi!.toStringAsFixed(2)}')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to store BMI data: $e')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter valid height and weight')),
@@ -69,34 +83,41 @@ class _BmiTrackingState extends State<BmiTracking> {
     }
   }
 
-  void calculateAndStoreWaistHipRatio() {
-    double waist = double.tryParse(_waistController.text) ?? 0.0;
-    double hip = double.tryParse(_hipController.text) ?? 0.0;
+  Future<void> _calculateAndStoreWaistHipRatio() async {
+    final waist = double.tryParse(_waistController.text) ?? 0.0;
+    final hip = double.tryParse(_hipController.text) ?? 0.0;
 
     if (waist > 0 && hip > 0) {
-      // Calculate Waist-Hip Ratio
       setState(() {
         _waistHipRatio = waist / hip;
       });
 
-      // Store in Firestore
-      CollectionReference cf = FirebaseFirestore.instance.collection('Tracker');
-      cf.add({
-        'uid': user?.uid,
-        'email': user?.email,
-        'waist': waist,
-        'hip': hip,
-        'waistHipRatio': _waistHipRatio,
-        //'bmi': _bmi,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
+      try {
+        final userUid = user?.uid;
+        final cf = FirebaseFirestore.instance
+            .collection('Personals')
+            .doc(userUid)
+            .collection('Tracker');
 
-      // Show Waist-Hip Ratio result
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content:
-                Text('Waist-Hip Ratio: ${_waistHipRatio!.toStringAsFixed(2)}')),
-      );
+        await cf.add({
+          'uid': user?.uid,
+          'email': user?.email,
+          'waist': waist,
+          'hip': hip,
+          'waistHipRatio': _waistHipRatio,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Waist-Hip Ratio: ${_waistHipRatio!.toStringAsFixed(2)}')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to store Waist-Hip Ratio data: $e')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -105,7 +126,7 @@ class _BmiTrackingState extends State<BmiTracking> {
     }
   }
 
-  DecorationImage bmilevelImage() {
+  DecorationImage _bmilevelImage() {
     if (_bmi == null) {
       return DecorationImage(
           image: AssetImage('assets/images/default.png'), fit: BoxFit.cover);
@@ -127,35 +148,21 @@ class _BmiTrackingState extends State<BmiTracking> {
     }
   }
 
-  Future<void> pager() {
+  Future<void> _navigateToBmiPage() async {
+    if (_bmi == null) return;
+
     if (_bmi! < 18.5) {
-      return Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Under_Weight(),
-        ),
-      );
+      await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Under_Weight()));
     } else if (_bmi! < 24.9) {
-      return Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Fit_Bmi(),
-        ),
-      );
+      await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Fit_Bmi()));
     } else if (_bmi! < 29.9) {
-      return Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Over_Weight(),
-        ),
-      );
+      await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Over_Weight()));
     } else {
-      return Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Obese(),
-        ),
-      );
+      await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Obese()));
     }
   }
 
@@ -169,10 +176,8 @@ class _BmiTrackingState extends State<BmiTracking> {
           IconButton(
             icon: Icon(Icons.list),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => BmiRecordsPage()),
-              );
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => BmiRecordsPage()));
             },
           ),
         ],
@@ -190,9 +195,7 @@ class _BmiTrackingState extends State<BmiTracking> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 120,
-                  ),
+                  SizedBox(height: 120),
                   TextButton(
                     onPressed: () {
                       setState(() {
@@ -208,95 +211,22 @@ class _BmiTrackingState extends State<BmiTracking> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                        color: Color.fromARGB(10, 119, 52, 248),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(20)),
+                      color: Color.fromARGB(10, 119, 52, 248),
+                      border: Border.all(color: Colors.black, width: 2.0),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     child: Column(
                       children: <Widget>[
                         if (_isBmiCalculation)
-                          Container(
-                            padding: EdgeInsets.all(16.0),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _heightController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Height (cm)',
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 2.0),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ),
-                                SizedBox(width: 16.0),
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _weightController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Weight (kg)',
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 2.0),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
+                          _buildInputFields(_heightController, 'Height (cm)',
+                              _weightController, 'Weight (kg)')
                         else
-                          Container(
-                            padding: EdgeInsets.all(16.0),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _waistController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Waist (cm)',
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 2.0),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ),
-                                SizedBox(width: 16.0),
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _hipController,
-                                    decoration: InputDecoration(
-                                      labelText: 'Hip (cm)',
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors.black, width: 2.0),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          _buildInputFields(_waistController, 'Waist (cm)',
+                              _hipController, 'Hip (cm)'),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white70,
-                          ),
-                          onPressed: _isBmiCalculation
-                              ? calculateAndStoreBMI
-                              : calculateAndStoreWaistHipRatio,
+                              backgroundColor: Colors.white70),
+                          onPressed: _calculateAndStoreData,
                           child: Text(
                             _isBmiCalculation
                                 ? 'Calculate BMI'
@@ -316,7 +246,7 @@ class _BmiTrackingState extends State<BmiTracking> {
                             decoration: BoxDecoration(
                               border: Border.all(width: 2.0),
                               borderRadius: BorderRadius.circular(20),
-                              image: bmilevelImage(),
+                              image: _bmilevelImage(),
                             ),
                           ),
                         ] else if (_waistHipRatio != null &&
@@ -329,10 +259,9 @@ class _BmiTrackingState extends State<BmiTracking> {
                         ],
                         if (_isBmiCalculation)
                           TextButton(
-                              onPressed: () {
-                                pager();
-                              },
-                              child: Text('For Suggestions !!! Click Here')),
+                            onPressed: _navigateToBmiPage,
+                            child: Text('For Suggestions !!! Click Here'),
+                          ),
                       ],
                     ),
                   ),
@@ -341,6 +270,44 @@ class _BmiTrackingState extends State<BmiTracking> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildInputFields(TextEditingController controller1, String label1,
+      TextEditingController controller2, String label2) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextFormField(
+              controller: controller1,
+              decoration: InputDecoration(
+                labelText: label1,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ),
+          SizedBox(width: 16.0),
+          Expanded(
+            child: TextFormField(
+              controller: controller2,
+              decoration: InputDecoration(
+                labelText: label2,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+          ),
+        ],
       ),
     );
   }

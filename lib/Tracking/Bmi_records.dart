@@ -9,17 +9,20 @@ class BmiRecordsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('BMI and Waist-Hip Ratio Records'),
+        title: Text('BMI & Waist-Hip Ratio Records'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
+            .collection('Personals')
+            .doc(user?.uid)
             .collection('Tracker')
-            .where('email', isEqualTo: user?.email)
             .orderBy('timestamp', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(child: Text('No records found.'));
           }
 
           final records = snapshot.data!.docs;
@@ -28,37 +31,39 @@ class BmiRecordsPage extends StatelessWidget {
             itemCount: records.length,
             itemBuilder: (context, index) {
               final record = records[index].data() as Map<String, dynamic>;
-              final height = record['height'];
-              final weight = record['weight'];
-              final bmi = record['bmi'];
-              final waist = record['waist'];
-              final hip = record['hip'];
-              final waistHipRatio = record['waistHipRatio'];
-              final timestamp = record['timestamp'] != null
-                  ? (record['timestamp'] as Timestamp).toDate()
-                  : DateTime.now();
+              final bmi = record.containsKey('bmi')
+                  ? record['bmi'].toStringAsFixed(2)
+                  : 'N/A';
+              final waistHipRatio = record.containsKey('waistHipRatio')
+                  ? record['waistHipRatio'].toStringAsFixed(2)
+                  : 'N/A';
+              final weight = record.containsKey('weight')
+                  ? record['weight'].toString()
+                  : 'N/A';
+              final height = record.containsKey('height')
+                  ? record['height'].toString()
+                  : 'N/A';
+              final waist = record.containsKey('waist')
+                  ? record['waist'].toString()
+                  : 'N/A';
+              final hip =
+                  record.containsKey('hip') ? record['hip'].toString() : 'N/A';
+              final timestamp = record.containsKey('timestamp')
+                  ? (record['timestamp'] as Timestamp).toDate().toString()
+                  : 'N/A';
 
               return ListTile(
-                title: Text(
-                    'Date: ${timestamp.toLocal().toString().split(' ')[0]}'),
+                title: Text('Recorded on: $timestamp'),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        'Height: $height cm, Weight: $weight kg, BMI: ${bmi != null ? bmi.toStringAsFixed(2) : 'N/A'}'),
-                    if (waist != null && hip != null && waistHipRatio != null)
-                      Text(
-                          'Waist: $waist cm, Hip: $hip cm, Waist-Hip Ratio: ${waistHipRatio.toStringAsFixed(2)}'),
+                    Text('BMI: $bmi'),
+                    Text('Weight: $weight kg'),
+                    Text('Height: $height cm'),
+                    Text('Waist-Hip Ratio: $waistHipRatio'),
+                    Text('Waist: $waist cm'),
+                    Text('Hip: $hip cm'),
                   ],
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection('Tracker')
-                        .doc(records[index].id)
-                        .delete();
-                  },
                 ),
               );
             },

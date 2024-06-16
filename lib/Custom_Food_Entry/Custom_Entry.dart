@@ -154,7 +154,9 @@ class _CustomEntryState extends State<CustomEntry> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Colors.cyanAccent,
       appBar: AppBar(
+        backgroundColor: Colors.white30,
         title: const Text('Custom Food Entry'),
         actions: [
           IconButton(
@@ -165,128 +167,130 @@ class _CustomEntryState extends State<CustomEntry> {
               icon: Icon(Icons.menu_open)),
         ],
       ),
-      body: /*Container(
+      body: Container(
         decoration: new BoxDecoration(
-          image: new DecorationImage(
-            //opacity: 0.5,
-            image: new AssetImage("assets/images/custom_foods.png"),
-            fit: BoxFit.cover,
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Colors.white,
+              Colors.green,
+            ],
           ),
         ),
-        child:*/
-          Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _foodNameController,
-                    decoration: InputDecoration(
-                      labelText: 'Food Name',
-                      border: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(15),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _foodNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Food Name',
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the food name';
+                        }
+                        return null;
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the food name';
-                      }
-                      return null;
-                    },
-                  ),
-                  Row(
-                    children: <Widget>[
-                      CustomEntryStateTextFormField(
-                        controller: _weightController,
-                        labelText: 'Weight (g)',
-                      ),
-                      CustomEntryStateTextFormField(
-                        controller: _fatController,
-                        labelText: 'Fats (g)',
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      CustomEntryStateTextFormField(
-                        controller: _carbController,
-                        labelText: 'Carbs (g)',
-                      ),
-                      CustomEntryStateTextFormField(
-                        controller: _caloriesController,
-                        labelText: 'Calories',
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      CustomEntryStateTextFormField(
-                        controller: _proteinController,
-                        labelText: 'Proteins (g)',
-                      ),
-                      CustomEntryStateTextFormField(
-                        controller: _fiberController,
-                        labelText: 'Fiber (g)',
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      CustomEntryStateTextFormField(
-                        controller: _sugarController,
-                        labelText: 'Sugar (g)',
-                      ),
-                      CustomEntryStateTextFormField(
-                        controller: _sodiumController,
-                        labelText: 'Sodium (mg)',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _showCustomSnackBar(context);
-                    },
-                    child: const Text('Add Image'),
-                  ),
-                  const SizedBox(height: 20),
-                  _selectedImage != null
-                      ? Image.file(
-                          _selectedImage!,
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        )
-                      : const Text(''),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_selectedImage == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please select an image'),
-                          ),
-                        );
-                        return;
-                      }
+                    Row(
+                      children: <Widget>[
+                        CustomEntryStateTextFormField(
+                          controller: _weightController,
+                          labelText: 'Weight (g)',
+                        ),
+                        CustomEntryStateTextFormField(
+                          controller: _fatController,
+                          labelText: 'Fats (g)',
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        CustomEntryStateTextFormField(
+                          controller: _carbController,
+                          labelText: 'Carbs (g)',
+                        ),
+                        CustomEntryStateTextFormField(
+                          controller: _caloriesController,
+                          labelText: 'Calories',
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        CustomEntryStateTextFormField(
+                          controller: _proteinController,
+                          labelText: 'Proteins (g)',
+                        ),
+                        CustomEntryStateTextFormField(
+                          controller: _fiberController,
+                          labelText: 'Fiber (g)',
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        CustomEntryStateTextFormField(
+                          controller: _sugarController,
+                          labelText: 'Sugar (g)',
+                        ),
+                        CustomEntryStateTextFormField(
+                          controller: _sodiumController,
+                          labelText: 'Sodium (mg)',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        _showCustomSnackBar(context);
+                      },
+                      child: const Text('Add Image'),
+                    ),
+                    const SizedBox(height: 20),
+                    _selectedImage != null
+                        ? Image.file(
+                            _selectedImage!,
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          )
+                        : const Text(''),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_selectedImage == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Please select an image'),
+                            ),
+                          );
+                          return;
+                        }
 
-                      if (_formKey.currentState!.validate()) {
-                        CustomFoods();
-                      }
-                    },
-                    child: const Text('Submit'),
-                  ),
-                ],
+                        if (_formKey.currentState!.validate()) {
+                          CustomFoods();
+                        }
+                      },
+                      child: const Text('Submit'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-      //),
     );
   }
 }
