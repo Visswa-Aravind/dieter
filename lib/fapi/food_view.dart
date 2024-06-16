@@ -22,15 +22,13 @@ class _FoodViewState extends State<FoodView> {
   @override
   void initState() {
     super.initState();
-    recipeFuture =
-        ConstantFunction.getResponse("chicken"); // Default search term
+    recipeFuture = ConstantFunction.getResponse("Dosa"); // Default search term
   }
 
   void _searchRecipes() {
     setState(() {
       recipeFuture = ConstantFunction.getResponse(_searchController.text);
-      _weightControllers
-          .clear(); // Clear previous controllers when new search is performed
+      _weightControllers.clear();
     });
   }
 
@@ -115,7 +113,10 @@ class _FoodViewState extends State<FoodView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(recipe['label'] ?? 'No Title'),
+          title: Text(
+            recipe['label'] ?? 'No Title',
+            style: TextStyle(fontFamily: 'Freedom-10eM'),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,6 +153,7 @@ class _FoodViewState extends State<FoodView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.grey,
       appBar: AppBar(
         title: Text('Recipes'),
         actions: [
@@ -162,34 +164,38 @@ class _FoodViewState extends State<FoodView> {
                 MaterialPageRoute(builder: (context) => SavedDataPage()),
               );
             },
-            icon: Icon(Icons.arrow_circle_right),
+            icon: Icon(Icons.list),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search for recipes',
-                      border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Search for Foods',
+                        border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2.0),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: _searchRecipes,
-                ),
-              ],
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: _searchRecipes,
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<Map<String, dynamic>>>(
+            FutureBuilder<List<Map<String, dynamic>>>(
               future: recipeFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -200,6 +206,8 @@ class _FoodViewState extends State<FoodView> {
                   return Center(child: Text('No recipes found'));
                 } else {
                   return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final recipe = snapshot.data![index];
@@ -207,57 +215,88 @@ class _FoodViewState extends State<FoodView> {
                           TextEditingController(); // Initialize controller if not already
 
                       return Card(
+                        elevation: 20,
+                        shadowColor: Colors.indigo,
+                        color: Colors.white24,
                         margin: const EdgeInsets.all(8.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              10.0), // Adjust the radius as needed
+                          side: BorderSide(color: Colors.indigo, width: 2.0),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              recipe['image'] != null
+                                  ? Center(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.black, width: 2.0),
+                                          borderRadius: BorderRadius.circular(
+                                              5.0), // Adjust the radius as needed
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              3.0), // Adjust the radius as needed
+                                          child: Image.network(
+                                            recipe['image'],
+                                            width: 130,
+                                            height: 130,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              SizedBox(height: 8.0),
+                              Center(
+                                child: Text(
+                                  recipe['label'] ?? 'No Title',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              SizedBox(height: 8.0),
                               Row(
                                 children: [
                                   Expanded(
-                                    child: ListTile(
-                                      leading: recipe['image'] != null
-                                          ? Image.network(
-                                              recipe['image'],
-                                              width: 50,
-                                              height: 50,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : null,
-                                      title:
-                                          Text(recipe['label'] ?? 'No Title'),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 150,
-                                    height: 40,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextField(
-                                            controller:
-                                                _weightControllers[index],
-                                            decoration: InputDecoration(
-                                              labelText: 'Weight (g)',
-                                              border: OutlineInputBorder(),
+                                    child: Container(
+                                      width: 150,
+                                      height: 40,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _weightControllers[index],
+                                              decoration: InputDecoration(
+                                                labelText: 'Weight (g)',
+                                                border: OutlineInputBorder(),
+                                              ),
+                                              keyboardType:
+                                                  TextInputType.number,
                                             ),
-                                            keyboardType: TextInputType.number,
                                           ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.add),
-                                          onPressed: () => _calculateNutrition(
-                                              recipe, index),
-                                        ),
-                                      ],
+                                          IconButton(
+                                            icon:
+                                                Icon(Icons.calculate_outlined),
+                                            onPressed: () =>
+                                                _calculateNutrition(
+                                                    recipe, index),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                              ElevatedButton(
-                                onPressed: () => _showNutrientsDialog(recipe),
-                                child: Text('Show Nutrients'),
+                              Center(
+                                child: TextButton(
+                                  onPressed: () => _showNutrientsDialog(recipe),
+                                  child: Text('Show Nutrients'),
+                                ),
                               ),
                             ],
                           ),
@@ -268,8 +307,8 @@ class _FoodViewState extends State<FoodView> {
                 }
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

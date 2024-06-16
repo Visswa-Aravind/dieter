@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dieter/Custom_Food_Entry/Custom_Entry.dart';
 import 'package:dieter/Tracking/Exercises.dart';
 import 'package:dieter/Login_Signup/Data_Viewing.dart';
 import 'package:dieter/Tracking/bmi_track.dart';
@@ -6,6 +7,8 @@ import 'package:dieter/fapi/food_view.dart';
 import 'package:dieter/fapi/grocery_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../Custom_Food_Entry/Custom_data.dart';
 
 class Pages_Drawer extends StatelessWidget {
   final User? user;
@@ -92,6 +95,19 @@ class Pages_Drawer extends StatelessWidget {
           ),
           Divider(height: 0.5),
           ListTile(
+            leading: Icon(Icons.food_bank_outlined),
+            title: Text('Custom Meals'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CustomData(),
+                ),
+              );
+            },
+          ),
+          Divider(height: 0.5),
+          ListTile(
             leading: Icon(Icons.track_changes_rounded),
             title: Text('Nutrient Tracking'),
             onTap: () {
@@ -107,7 +123,14 @@ class Pages_Drawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.fastfood_outlined),
             title: Text('Custom Food Entry'),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CustomEntry(),
+                ),
+              );
+            },
           ),
           Divider(height: 0.5),
           ListTile(

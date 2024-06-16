@@ -46,6 +46,13 @@ dependencies:
   iconify_flutter: ^0.0.5
   get: ^4.6.6
   http: ^1.2.1
+  firebase_messaging: ^15.0.1
+  flutter_local_notifications: ^9.8.0+1
+  intl: ^0.17.0
+  image_picker: ^1.1.2
+  firebase_storage: ^12.0.1
+
+
 
 
 
@@ -100,7 +107,7 @@ flutter:
      - family: BrownieStencil-8O8MJ
        fonts:
          - asset: assets/fonts/BrownieStencil-8O8MJ.ttf
-     - family: Freedom-10eM.ttf
+     - family: Freedom-10eM
        fonts:
          - asset: assets/fonts/Freedom-10eM.ttf
   #       - asset: fonts/Schyler-Italic.ttf

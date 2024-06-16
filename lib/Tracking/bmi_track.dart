@@ -179,14 +179,6 @@ class _BmiTrackingState extends State<BmiTracking> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          /*gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Colors.tealAccent,
-              Colors.teal,
-            ],
-          ),*/
           image: DecorationImage(
             image: AssetImage('assets/images/img_4.jpg'),
             fit: BoxFit.cover,
