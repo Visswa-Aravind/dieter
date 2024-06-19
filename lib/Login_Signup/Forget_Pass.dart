@@ -16,17 +16,19 @@ class _ForgetPassState extends State<ForgetPass> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
+        backgroundColor: Color(0xFFB9DC78),
         title: Text('Forget Password'),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        /* decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blue, Colors.green],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-        ),
+        ),*/
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -50,7 +52,7 @@ class _ForgetPassState extends State<ForgetPass> {
                   ),
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
+                IconButton(
                   onPressed: () async {
                     var forgotpass = ForgetPassController.text.trim();
 
@@ -82,14 +84,15 @@ class _ForgetPassState extends State<ForgetPass> {
                       );
                     }
                   },
-                  child: Text(
+                  /*child: Text(
                     'Reset Password',
                     style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
+                  ),*/
+                  /* style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.indigo, // Text color
-                  ),
+                  ),*/
+                  icon: Icon(Icons.switch_access_shortcut_add_sharp),
                 ),
               ],
             ),

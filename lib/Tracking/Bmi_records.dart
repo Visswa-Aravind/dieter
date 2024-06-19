@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../auth.dart';
+
 class BmiRecordsPage extends StatelessWidget {
   final User? user = FirebaseAuth.instance.currentUser;
 
@@ -31,6 +33,18 @@ class BmiRecordsPage extends StatelessWidget {
             itemCount: records.length,
             itemBuilder: (context, index) {
               final record = records[index].data() as Map<String, dynamic>;
+
+              print('Raw record: $record');
+
+              // Check if 'timestamp' field exists and has a valid value
+              final timestamp = record.containsKey('timestamp') &&
+                      record['timestamp'] != null &&
+                      record['timestamp'] is Timestamp
+                  ? (record['timestamp'] as Timestamp).toDate().toString()
+                  : 'N/A';
+
+              print('Processed timestamp: $timestamp');
+
               final bmi = record.containsKey('bmi')
                   ? record['bmi'].toStringAsFixed(2)
                   : 'N/A';
@@ -48,9 +62,6 @@ class BmiRecordsPage extends StatelessWidget {
                   : 'N/A';
               final hip =
                   record.containsKey('hip') ? record['hip'].toString() : 'N/A';
-              final timestamp = record.containsKey('timestamp')
-                  ? (record['timestamp'] as Timestamp).toDate().toString()
-                  : 'N/A';
 
               return ListTile(
                 title: Text('Recorded on: $timestamp'),
@@ -64,6 +75,17 @@ class BmiRecordsPage extends StatelessWidget {
                     Text('Waist: $waist cm'),
                     Text('Hip: $hip cm'),
                   ],
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    FirebaseFirestore.instance
+                        .collection('Personals')
+                        .doc(Auth().currentUser?.uid)
+                        .collection('Tracker')
+                        .doc(records[index].id)
+                        .delete();
+                  },
                 ),
               );
             },

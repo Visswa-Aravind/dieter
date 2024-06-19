@@ -151,7 +151,9 @@ class CustomData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
+        backgroundColor: Color(0xFFB9DC78),
         title: Text('Custom Food Entries'),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -180,88 +182,89 @@ class CustomData extends StatelessWidget {
                 _weightControllers[index] ??= TextEditingController();
 
                 return Card(
-                  elevation: 20,
-                  color: Colors.white24,
-                  shadowColor: Colors.indigo,
+                  elevation: 60,
+                  // color: Color(0xFFB9DC78),
+                  shadowColor: Colors.white,
                   margin: const EdgeInsets.all(8.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    side: BorderSide(color: Colors.indigo, width: 2.0),
+                    side: BorderSide(color: Colors.black, width: 2.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         data['image_url'] != null
-                            ? Center(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        color: Colors.black, width: 2.0),
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(3.0),
-                                    child: Image.network(
-                                      data['image_url'],
-                                      width: 130,
-                                      height: 130,
-                                      fit: BoxFit.cover,
-                                    ),
+                            ? Container(
+                                width: 130,
+                                height: 130,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black, width: 2.0),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(3.0),
+                                  child: Image.network(
+                                    data['image_url'],
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               )
                             : Container(),
-                        SizedBox(height: 8.0),
-                        Center(
-                          child: Text(
-                            data['Food Name'] ?? 'No Title',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(height: 8.0),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                width: 150,
-                                height: 40,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        controller: _weightControllers[index],
-                                        decoration: InputDecoration(
-                                          labelText: 'Enter weight in grams',
-                                          border: OutlineInputBorder(),
-                                        ),
-                                        keyboardType: TextInputType.number,
+                        SizedBox(width: 8.0),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data['Food Name'] ?? 'No Title',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8.0),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      height: 40,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextField(
+                                              controller:
+                                                  _weightControllers[index],
+                                              decoration: InputDecoration(
+                                                labelText: 'Enter weight (gm)',
+                                                border: OutlineInputBorder(),
+                                              ),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.calculate),
+                                            onPressed: () {
+                                              _calculateNutrition(
+                                                  data, index, context);
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    IconButton(
-                                      icon: Icon(Icons.calculate),
-                                      onPressed: () {
-                                        _calculateNutrition(
-                                            data, index, context);
-                                      },
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8.0),
-                        Center(
-                          child: TextButton(
-                            onPressed: () {
-                              _showNutrientsDialog(context, data);
-                            },
-                            child: Text('Show Nutrients'),
+                              SizedBox(height: 8.0),
+                              TextButton(
+                                onPressed: () {
+                                  _showNutrientsDialog(context, data);
+                                },
+                                child: Text('Show Nutrients'),
+                              ),
+                            ],
                           ),
                         ),
-                        //Text('Date: $formattedTimestamp'),
                       ],
                     ),
                   ),

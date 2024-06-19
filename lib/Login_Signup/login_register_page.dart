@@ -175,26 +175,20 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _googleSignInButton() {
-    return ElevatedButton(
-      onPressed: signInWithGoogle,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            'assets/images/Google_logo.png',
-            height: 30,
-            width: 30,
-          ),
-          SizedBox(width: 4),
-          Text(
-            'Sign in with Google',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ],
+    return IconButton(
+      icon: Image.asset(
+        'assets/images/Google_logo.png',
+        width: 50,
+        height: 50,
       ),
+      iconSize: 5,
+      onPressed: () {
+        signInWithGoogle();
+      },
     );
   }
 
+  //'assets/images/Google_logo.png'
   Widget _loginOrRegisterButton() {
     return TextButton(
       onPressed: () {
@@ -215,19 +209,24 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFB9DC78),
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
+        /*decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
-              Colors.blue,
-              Colors.red,
+              */ /* Colors.blue,
+              Colors.red,*/ /*
+              */ /*Colors.black54,
+              Colors.green,*/ /*
+              Colors.white,
+              Colors.white,
             ],
           ),
-        ),
+        ),*/
         child: Center(
           child: SingleChildScrollView(
             child: Column(

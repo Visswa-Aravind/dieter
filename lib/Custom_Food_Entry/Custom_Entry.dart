@@ -154,7 +154,7 @@ class _CustomEntryState extends State<CustomEntry> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.cyanAccent,
+      backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
         backgroundColor: Colors.white30,
         title: const Text('Custom Food Entry'),
@@ -168,7 +168,7 @@ class _CustomEntryState extends State<CustomEntry> {
         ],
       ),
       body: Container(
-        decoration: new BoxDecoration(
+        /*decoration: new BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
@@ -177,7 +177,7 @@ class _CustomEntryState extends State<CustomEntry> {
               Colors.green,
             ],
           ),
-        ),
+        ),*/
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
@@ -252,11 +252,14 @@ class _CustomEntryState extends State<CustomEntry> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    ElevatedButton(
+                    IconButton(
                       onPressed: () {
                         _showCustomSnackBar(context);
                       },
-                      child: const Text('Add Image'),
+                      icon: Icon(
+                        Icons.camera_enhance_rounded,
+                        size: 40,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     _selectedImage != null
@@ -267,7 +270,7 @@ class _CustomEntryState extends State<CustomEntry> {
                             fit: BoxFit.cover,
                           )
                         : const Text(''),
-                    ElevatedButton(
+                    IconButton(
                       onPressed: () {
                         if (_selectedImage == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -282,7 +285,11 @@ class _CustomEntryState extends State<CustomEntry> {
                           CustomFoods();
                         }
                       },
-                      child: const Text('Submit'),
+                      icon: Icon(
+                        Icons.verified,
+                        size: 40,
+                      ),
+                      //child: const Text('Submit'),
                     ),
                   ],
                 ),

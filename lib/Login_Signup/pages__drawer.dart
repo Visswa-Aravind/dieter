@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dieter/Custom_Food_Entry/Custom_Entry.dart';
+import 'package:dieter/Progress/Nutrient_Tracking.dart';
 import 'package:dieter/Tracking/Exercises.dart';
 import 'package:dieter/Login_Signup/Data_Viewing.dart';
 import 'package:dieter/Tracking/bmi_track.dart';
@@ -114,7 +115,7 @@ class Pages_Drawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RecipeSuggestionsScreen(),
+                  builder: (context) => NutrientTracking(),
                 ),
               );
             },
@@ -158,7 +159,10 @@ class Pages_Drawer extends StatelessWidget {
             },
           ),
           Divider(height: 0.5),
-          ElevatedButton(onPressed: onSignOut, child: Text('Signout')),
+          IconButton(
+            onPressed: onSignOut,
+            icon: Icon(Icons.power_settings_new_outlined),
+          ),
         ],
       ),
     );

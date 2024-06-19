@@ -48,9 +48,14 @@ dependencies:
   http: ^1.2.1
   firebase_messaging: ^15.0.1
   flutter_local_notifications: ^9.8.0+1
-  intl: ^0.17.0
+  intl: ^0.19.0
   image_picker: ^1.1.2
   firebase_storage: ^12.0.1
+  fl_chart: ^0.68.0
+  table_calendar: ^3.1.2
+  flutter_chart: ^0.1.6
+  syncfusion_flutter_charts: ^26.1.35
+
 
 
 
@@ -110,6 +115,12 @@ flutter:
      - family: Freedom-10eM
        fonts:
          - asset: assets/fonts/Freedom-10eM.ttf
+     - family: ShadeBlue-2OozX
+       fonts:
+         - asset: assets/fonts/ShadeBlue-2OozX.ttf
+     - family: ChocoChici-2OMyW
+       fonts:
+         - asset: assets/fonts/ChocoChici-2OMyW.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -91,9 +91,9 @@ class _DataViewingState extends State<DataViewing> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white70,
+      backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
-        backgroundColor: Colors.white70,
+        backgroundColor: Color(0xFFB9DC78),
         title: Text('Data Updating'),
         actions: [
           IconButton(
