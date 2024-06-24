@@ -153,7 +153,7 @@ class CustomData extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
-        backgroundColor: Color(0xFFB9DC78),
+        backgroundColor: Colors.white60,
         title: Text('Custom Food Entries'),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -183,8 +183,8 @@ class CustomData extends StatelessWidget {
 
                 return Card(
                   elevation: 60,
-                  // color: Color(0xFFB9DC78),
-                  shadowColor: Colors.white,
+                  color: Colors.white60,
+                  shadowColor: Colors.black,
                   margin: const EdgeInsets.all(8.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),

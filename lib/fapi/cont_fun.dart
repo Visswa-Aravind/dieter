@@ -1,40 +1,30 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<List<Map<String, dynamic>>> fetchRecipeSuggestions(String query) async {
-  final String id = '35e6c1a6';
-  final String key = '0fcbe4287daeced4e21b0fbfa00d48a7';
-  final String apiUrl =
-      'https://api.edamam.com/api/food-database/v2/parser?app_id=$id&app_key=$key&q=$query'; /*&nutrition-type=cooking*/
+class ContFun {
+  static Future<List<Map<String, dynamic>>> getRes(String findrecipe) async {
+    String id = 'a5f8e5f6';
+    String key = 'bd0682b03769c566127c7559c6eb617a';
+    String api =
+        'https://api.edamam.com/search?q=$findrecipe&app_id=$id&app_key=$key&health=alcohol-free';
+    final response = await http.get(Uri.parse(api));
+    List<Map<String, dynamic>> recipes = [];
 
-  final response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
 
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = json.decode(response.body);
-    final List<Map<String, dynamic>> suggestions = [];
-
-    if (data.containsKey('hints')) {
-      final List<dynamic> hints = data['hints'];
-
-      for (var hint in hints) {
-        if (hint.containsKey('food')) {
-          final Map<String, dynamic> food = hint['food'];
-          if (food.containsKey('label')) {
-            suggestions.add({
-              'label': food['label'],
-              'image': food['image'] ?? null,
-              'calories': food['nutrients']['ENERC_KCAL']?.toDouble() ?? null,
-              'protein': food['nutrients']['PROCNT']?.toDouble() ?? null,
-              'fat': food['nutrients']['FAT']?.toDouble() ?? null,
-              'carbs': food['nutrients']['CHOCDF']?.toDouble() ?? null,
-            });
+      if (data['hits'] != null) {
+        for (var hit in data['hits']) {
+          if (hit['recipe'] != null && hit['recipe']['healthLabels'] != null) {
+            if (hit['recipe']['healthLabels'].contains('Vegetarian')) {
+              recipes.add(hit['recipe']);
+            }
           }
         }
       }
+    } else {
+      print('Failed to load recipes: ${response.statusCode}');
     }
-
-    return suggestions;
-  } else {
-    throw Exception('Failed to fetch suggestions');
+    return recipes;
   }
 }

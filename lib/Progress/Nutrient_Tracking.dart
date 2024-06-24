@@ -13,7 +13,9 @@ class NutrientTracking extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
+        backgroundColor: Colors.white60,
         title: Text('Nutrients Data'),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -51,7 +53,8 @@ class NutrientTracking extends StatelessWidget {
                 final sodium = double.tryParse(data['sodium'].toString()) ?? 0;
 
                 return Card(
-                  color: Color(0xFFB9DC78),
+                  elevation: 20,
+                  color: Colors.white60,
                   child: ListTile(
                     title: Text(
                       data['recipeName'] ?? 'Unknown Recipe',

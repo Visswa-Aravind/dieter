@@ -155,7 +155,7 @@ class _FoodViewState extends State<FoodView> {
     return Scaffold(
       backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
-        backgroundColor: Color(0xFFB9DC78),
+        backgroundColor: Colors.white60,
         title: Text('Meal Logging'),
         actions: [
           IconButton(
@@ -170,150 +170,156 @@ class _FoodViewState extends State<FoodView> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: 'Search for Foods',
-                        border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.black, width: 2.0),
-                          borderRadius: BorderRadius.circular(15),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search for Foods',
+                          border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.black, width: 2.0),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: _searchRecipes,
-                  ),
-                ],
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: _searchRecipes,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            FutureBuilder<List<Map<String, dynamic>>>(
-              future: recipeFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No recipes found'));
-                } else {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final recipe = snapshot.data![index];
-                      _weightControllers[index] ??=
-                          TextEditingController(); // Initialize controller if not already
+              FutureBuilder<List<Map<String, dynamic>>>(
+                future: recipeFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No recipes found'));
+                  } else {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        final recipe = snapshot.data![index];
+                        _weightControllers[index] ??=
+                            TextEditingController(); // Initialize controller if not already
 
-                      return Card(
-                        elevation: 20,
-                        shadowColor: Colors.white,
-                        //color: Color(0xFFB9DC78),
-                        margin: const EdgeInsets.all(8.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Adjust the radius as needed
-                          side: BorderSide(color: Colors.black, width: 2.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              recipe['image'] != null
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black, width: 2.0),
-                                        borderRadius: BorderRadius.circular(
-                                            5.0), // Adjust the radius as needed
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(
-                                            3.0), // Adjust the radius as needed
-                                        child: Image.network(
-                                          recipe['image'],
-                                          width: 110,
-                                          height: 110,
-                                          fit: BoxFit.cover,
+                        return Card(
+                          elevation: 20,
+                          color: Colors.white60,
+                          shadowColor: Colors.black,
+                          //color: Color(0xFFB9DC78),
+                          margin: const EdgeInsets.all(8.0),
+                          /*shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                10.0), // Adjust the radius as needed
+                            side: BorderSide(color: Colors.black, width: 2.0),
+                          ),*/
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                recipe['image'] != null
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.black, width: 2.0),
+                                          borderRadius: BorderRadius.circular(
+                                              5.0), // Adjust the radius as needed
                                         ),
-                                      ),
-                                    )
-                                  : Container(),
-                              SizedBox(width: 8.0),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      recipe['label'] ?? 'No Title',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 8.0),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Container(
-                                            height: 40,
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: TextField(
-                                                    controller:
-                                                        _weightControllers[
-                                                            index],
-                                                    decoration: InputDecoration(
-                                                      labelText: 'Weight (g)',
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                    ),
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                      Icons.calculate_outlined),
-                                                  onPressed: () =>
-                                                      _calculateNutrition(
-                                                          recipe, index),
-                                                ),
-                                              ],
-                                            ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              3.0), // Adjust the radius as needed
+                                          child: Image.network(
+                                            recipe['image'],
+                                            width: 110,
+                                            height: 110,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    TextButton(
-                                      onPressed: () =>
-                                          _showNutrientsDialog(recipe),
-                                      child: Text('Show Nutrients'),
-                                    ),
-                                  ],
+                                      )
+                                    : Container(),
+                                SizedBox(width: 8.0),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        recipe['label'] ?? 'No Title',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              height: 40,
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: TextField(
+                                                      controller:
+                                                          _weightControllers[
+                                                              index],
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText: 'Weight (g)',
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(Icons
+                                                        .calculate_outlined),
+                                                    onPressed: () =>
+                                                        _calculateNutrition(
+                                                            recipe, index),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            _showNutrientsDialog(recipe),
+                                        child: Text('Show Nutrients'),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }
-              },
-            ),
-          ],
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

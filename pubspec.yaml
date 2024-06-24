@@ -55,6 +55,7 @@ dependencies:
   table_calendar: ^3.1.2
   flutter_chart: ^0.1.6
   syncfusion_flutter_charts: ^26.1.35
+  flutter_facebook_auth: ^7.0.1
 
 
 

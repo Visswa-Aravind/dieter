@@ -93,7 +93,7 @@ class _DataViewingState extends State<DataViewing> {
     return Scaffold(
       backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
-        backgroundColor: Color(0xFFB9DC78),
+        backgroundColor: Colors.white60,
         title: Text('Data Updating'),
         actions: [
           IconButton(

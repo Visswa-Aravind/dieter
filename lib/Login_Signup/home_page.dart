@@ -208,7 +208,7 @@ class HomePage extends StatelessWidget {
                         },
                         icon: Icon(
                           Icons.power_settings_new,
-                          color: Colors.black,
+                          color: Colors.red,
                           size: 40,
                         ))
                   ],

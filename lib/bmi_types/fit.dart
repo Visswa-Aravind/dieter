@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../Recipe/Dishes.dart';
 import '../Tracking/Exercises.dart';
+import '../fapi/food_view.dart';
 
 class Fit_Bmi extends StatefulWidget {
   const Fit_Bmi({super.key});
@@ -153,7 +155,13 @@ class _Fit_BmiState extends State<Fit_Bmi> {
                                       color: Colors.lightGreenAccent,
                                       shape: OvalBorder()),
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  VegetarianDishes()));
+                                    },
                                     child: Text(
                                       'Veg',
                                       style: TextStyle(color: Colors.black),
@@ -257,7 +265,13 @@ class _Fit_BmiState extends State<Fit_Bmi> {
                                   height: 5,
                                 ),
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FoodView()));
+                                    },
                                     child: Text(
                                       'Click Here',
                                       style: TextStyle(color: Colors.indigo),

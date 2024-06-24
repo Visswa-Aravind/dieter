@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../Recipe/Dishes.dart';
 import '../Tracking/Exercises.dart';
+import '../fapi/food_view.dart';
 
 class Under_Weight extends StatefulWidget {
   const Under_Weight({super.key});
@@ -141,7 +143,13 @@ class _Under_WeightState extends State<Under_Weight> {
                                       color: Colors.lightGreenAccent,
                                       shape: OvalBorder()),
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  VegetarianDishes()));
+                                    },
                                     child: Text(
                                       'Veg',
                                       style: TextStyle(color: Colors.black),
@@ -245,7 +253,10 @@ class _Under_WeightState extends State<Under_Weight> {
                                   height: 5,
                                 ),
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>FoodView()));
+
+                                    },
                                     child: Text(
                                       'Click Here',
                                       style: TextStyle(color: Colors.indigo),

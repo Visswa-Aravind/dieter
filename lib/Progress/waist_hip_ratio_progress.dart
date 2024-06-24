@@ -28,13 +28,17 @@ class _WaistHipRatioPageState extends State<WaistHipRatioPage> {
         ? currentDate.subtract(Duration(days: 20))
         : period == 'weekly'
             ? currentDate.subtract(Duration(days: 140)) // 20 weeks
-            : currentDate.subtract(Duration(days: 365));
+            : period == 'monthly'
+                ? currentDate.subtract(Duration(days: 365)) // 12 months
+                : currentDate.subtract(Duration(days: 365 * 5)); // 5 years
 
     for (var doc in records) {
       final data = doc.data() as Map<String, dynamic>;
       final timestamp = data['timestamp'] as Timestamp;
       final date = timestamp.toDate();
       final waistHipRatio = (data['waistHipRatio'] ?? 0.0).toDouble();
+
+      if (date.isBefore(startDate)) continue;
 
       String key;
       if (period == 'daily') {
@@ -67,18 +71,14 @@ class _WaistHipRatioPageState extends State<WaistHipRatioPage> {
     }
 
     return groupedData.entries.map((entry) {
-      final averageRatio =
-          entry.value.reduce((a, b) => a + b) / entry.value.length;
       final date = _parseDate(entry.key, period);
-      return RatioData(
-          date,
-          period == 'daily' &&
-                  entry.key == DateFormat('yyyy-MM-dd').format(currentDate)
-              ? entry.value.isNotEmpty
-                  ? entry.value.first
-                  : 0.0
-              : averageRatio,
-          entry.key); // Direct waist-hip ratio value for daily
+      double value;
+      if (period == 'daily') {
+        value = entry.value.isNotEmpty ? entry.value.first : 0.0;
+      } else {
+        value = entry.value.reduce((a, b) => a + b) / entry.value.length;
+      }
+      return RatioData(date, value, entry.key);
     }).toList();
   }
 

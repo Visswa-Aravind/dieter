@@ -1,4 +1,6 @@
+import 'package:dieter/Recipe/Dishes.dart';
 import 'package:dieter/Tracking/Exercises.dart';
+import 'package:dieter/fapi/food_view.dart';
 import 'package:flutter/material.dart';
 import '__over__weight_state_container.dart';
 
@@ -153,7 +155,13 @@ class _Over_WeightState extends State<Over_Weight> {
                                       color: Colors.lightGreenAccent,
                                       shape: OvalBorder()),
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  VegetarianDishes()));
+                                    },
                                     child: Text(
                                       'Veg',
                                       style: TextStyle(color: Colors.black),
@@ -257,7 +265,9 @@ class _Over_WeightState extends State<Over_Weight> {
                                   height: 5,
                                 ),
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>FoodView()));
+                                    },
                                     child: Text(
                                       'Click Here',
                                       style: TextStyle(color: Colors.indigo),

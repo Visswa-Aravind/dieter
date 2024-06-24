@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class HomePageInkWell extends StatelessWidget {
   const HomePageInkWell({
@@ -14,12 +16,7 @@ class HomePageInkWell extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (screen != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => screen!),
-          );
-        }
+        Get.to(screen!);
       },
       child: CircleAvatar(
         radius: 70.0, // Adjust the radius as needed

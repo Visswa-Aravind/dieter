@@ -153,7 +153,7 @@ class CustomDataPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
-        backgroundColor: Color(0xFFB9DC78),
+        backgroundColor: Colors.white60,
         title: Text('Custom Food Entries'),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -182,14 +182,15 @@ class CustomDataPage extends StatelessWidget {
                 _weightControllers[index] ??= TextEditingController();
 
                 return Card(
+                  color: Colors.white60,
                   elevation: 20,
-                  shadowColor: Colors.indigo,
+                  shadowColor: Colors.black,
                   //color: Color(0xFFB9DC78),
                   margin: const EdgeInsets.all(8.0),
-                  shape: RoundedRectangleBorder(
+                  /*shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                     side: BorderSide(color: Colors.indigo, width: 2.0),
-                  ),
+                  ),*/
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(

@@ -63,29 +63,54 @@ class BmiRecordsPage extends StatelessWidget {
               final hip =
                   record.containsKey('hip') ? record['hip'].toString() : 'N/A';
 
-              return ListTile(
-                title: Text('Recorded on: $timestamp'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('BMI: $bmi'),
-                    Text('Weight: $weight kg'),
-                    Text('Height: $height cm'),
-                    Text('Waist-Hip Ratio: $waistHipRatio'),
-                    Text('Waist: $waist cm'),
-                    Text('Hip: $hip cm'),
-                  ],
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection('Personals')
-                        .doc(Auth().currentUser?.uid)
-                        .collection('Tracker')
-                        .doc(records[index].id)
-                        .delete();
-                  },
+              return Card(
+                elevation: 30,
+                child: ListTile(
+                  title: Text('Recorded on: \n$timestamp'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'BMI: $bmi',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text('Weight: $weight kg'),
+                      Text('Height: $height cm'),
+                      Text(
+                        'Waist-Hip Ratio: $waistHipRatio',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text('Waist: $waist cm'),
+                      Text('Hip: $hip cm'),
+                    ],
+                  ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      showDialog<void>(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          return AlertDialog(
+                            title: Text('Delete Record'),
+                            content: Text('Are You Sure ????'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    FirebaseFirestore.instance
+                                        .collection('Personals')
+                                        .doc(Auth().currentUser?.uid)
+                                        .collection('Tracker')
+                                        .doc(records[index].id)
+                                        .delete();
+                                    Navigator.of(dialogContext).pop();
+                                  },
+                                  child: Text('Yes'))
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               );
             },
