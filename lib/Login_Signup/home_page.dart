@@ -4,6 +4,7 @@ import 'package:dieter/Login_Signup/home_page_ink_well.dart';
 import 'package:dieter/Login_Signup/pages__drawer.dart';
 import 'package:dieter/Progress/bmi_progress.dart';
 import 'package:dieter/Progress/progress_frontpage.dart';
+import 'package:dieter/Recipe/All_Dishes.dart';
 import 'package:dieter/Tracking/Exercises.dart';
 import 'package:dieter/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -191,8 +192,24 @@ class HomePage extends StatelessWidget {
                     ),
                     SizedBox(width: 20),
                     HomePageInkWell(
+                      icons: Icons.cookie_outlined,
+                      screen: AllDishes(),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    HomePageInkWell(
                       icons: Icons.run_circle_outlined,
                       screen: Exercises(),
+                    ),
+                    SizedBox(width: 20),
+                    HomePageInkWell(
+                      icons: Icons.alarm_add_rounded,
                     ),
                   ],
                 ),

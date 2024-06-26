@@ -42,7 +42,7 @@ class _AllDishesState extends State<AllDishes> {
       backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
         backgroundColor: Colors.white60,
-        title: Text('Vegetarian Recipes'),
+        title: Text('Recipe Search'),
       ),
       body: Column(
         children: [
@@ -71,7 +71,13 @@ class _AllDishesState extends State<AllDishes> {
                     'Vegetarian',
                     'Gluten-Free',
                     'Vegan',
-                    'Low Carb'
+                    'Low Carb',
+                    'Egg-Free',
+                    'Fish-Free'
+                        'Soy-Free',
+                    'Sesame-Free',
+                    'Red-Meat-Free',
+                    'Pork-Free',
                   ].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,

@@ -18,6 +18,8 @@ class _LoginPageState extends State<LoginPage> {
   String? errorMessage = '';
   bool isLogin = true;
 
+  bool passwordVisible = false;
+
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
@@ -135,10 +137,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _entryField(
-      String title, TextEditingController controller, TextInputType type) {
+  Widget _entryField(String title, TextEditingController controller,
+      TextInputType type, bool isPassword) {
     return TextField(
       controller: controller,
+      obscureText: isPassword ? !passwordVisible : false,
       keyboardType: type,
       decoration: InputDecoration(
         labelText: title,
@@ -246,10 +249,10 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       _entryField('Email', _controllerEmail,
-                          TextInputType.emailAddress),
+                          TextInputType.emailAddress, false),
                       SizedBox(height: 15),
                       _entryField('Password', _controllerPassword,
-                          TextInputType.visiblePassword),
+                          TextInputType.visiblePassword, true),
                       _errorMessage(),
                       SizedBox(height: 15),
                       _submitButton(),

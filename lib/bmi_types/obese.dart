@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
+import '../Recipe/All_Dishes.dart';
 import '../Recipe/Dishes.dart';
 import '../Tracking/Exercises.dart';
 import '../fapi/food_view.dart';
@@ -97,11 +100,7 @@ class _ObeseState extends State<Obese> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Exercises()),
-                                      );
+                                      Get.to(Exercises());
                                     },
                                     child: Text(
                                       'Follow Here',
@@ -156,11 +155,7 @@ class _ObeseState extends State<Obese> {
                                       shape: OvalBorder()),
                                   child: TextButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VegetarianDishes()));
+                                      Get.to(VegetarianDishes());
                                     },
                                     child: Text(
                                       'Veg',
@@ -177,7 +172,9 @@ class _ObeseState extends State<Obese> {
                                     shape: OvalBorder(),
                                   ),
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.to(AllDishes());
+                                    },
                                     child: Text(
                                       'Non Veg',
                                       style: TextStyle(color: Colors.black),
@@ -266,10 +263,7 @@ class _ObeseState extends State<Obese> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => FoodView()));
+                                    Get.to(FoodView());
                                   },
                                   child: Text(
                                     'Click Here',

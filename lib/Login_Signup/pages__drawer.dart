@@ -127,9 +127,11 @@ class Pages_Drawer extends StatelessWidget {
             ),
             //  Divider(height: 0.5),
             ListTile(
-              leading: Icon(Icons.alarm_add),
-              title: Text('Reminders'),
-              onTap: () {},
+              leading: Icon(Icons.cookie_outlined),
+              title: Text('Food Recipes'),
+              onTap: () {
+                Get.to(AllDishes());
+              },
             ),
             //   Divider(height: 0.5),
             ListTile(
@@ -140,11 +142,9 @@ class Pages_Drawer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: Icon(Icons.run_circle_outlined),
-              title: Text('Food Recipes'),
-              onTap: () {
-                Get.to(AllDishes());
-              },
+              leading: Icon(Icons.alarm_add),
+              title: Text('Reminders'),
+              onTap: () {},
             ),
             SizedBox(
               height: 20,

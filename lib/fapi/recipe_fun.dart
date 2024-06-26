@@ -22,6 +22,24 @@ class RecipeFunction {
       case 'Low Carb':
         healthFilter = '&diet=low-carb';
         break;
+      case 'Egg-Free':
+        healthFilter = '&Egg-Free';
+        break;
+      case 'Fish-Free':
+        healthFilter = '&Fish-Free';
+        break;
+      case 'Soy-Free':
+        healthFilter = '&Soy-Free';
+        break;
+      case 'Sesame-Free':
+        healthFilter = '&Sesame-Free';
+        break;
+      case 'Red-Meat-Free':
+        healthFilter = '&Red-Meat-Free';
+        break;
+      case 'Pork-Free':
+        healthFilter = '&Pork-Free';
+        break;
       default:
         healthFilter = '&health=alcohol-free';
     }

@@ -1,5 +1,8 @@
+import 'package:dieter/Progress/Nutrient_Tracking.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import '../auth.dart';
 import 'package:intl/intl.dart'; // For formatting the timestamp
 
@@ -13,7 +16,9 @@ class SavedDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFB9DC78),
       appBar: AppBar(
+        backgroundColor: Color(0xFFB9DC78),
         title: Text('Saved Data'),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -39,33 +44,56 @@ class SavedDataPage extends StatelessWidget {
                 final formattedTimestamp =
                     timestamp != null ? _formatTimestamp(timestamp) : 'No date';
 
-                return ListTile(
-                  title: Text(data['recipeName'] ?? 'Unknown Recipe'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Calories: ${data['calories']}'),
-                      Text('Protein: ${data['protein']} g'),
-                      Text('Fat: ${data['fat']} g'),
-                      Text('Carbs: ${data['carbs']} g'),
-                      Text('Fiber: ${data['fiber']} g'),
-                      Text('Sugar: ${data['sugar']} g'),
-                      Text('Sodium: ${data['sodium']} g'),
-                      Text(
-                          'Date: $formattedTimestamp'), // Display formatted date and time
-                    ],
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('Personals')
-                          .doc(Auth().currentUser?.uid)
-                          .collection('Mealtracker')
-                          .doc(document
-                              .id) // Corrected the way to access the document ID
-                          .delete();
-                    },
+                return Card(
+                  elevation: 20,
+                  color: Colors.white60,
+                  child: ListTile(
+                    title: Text(
+                      data['recipeName'] ?? 'Unknown Recipe',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Calories: ${data['calories']}'),
+                        Text('Protein: ${data['protein']} g'),
+                        Text('Fat: ${data['fat']} g'),
+                        Text('Carbs: ${data['carbs']} g'),
+                        Text('Fiber: ${data['fiber']} g'),
+                        Text('Sugar: ${data['sugar']} g'),
+                        Text('Sodium: ${data['sodium']} g'),
+                        Text(
+                            'Date: $formattedTimestamp'), // Display formatted date and time
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        Get.defaultDialog(
+                          title: 'Delete Data',
+                          content: Text('Are you Sure ??? '),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('Personals')
+                                      .doc(Auth().currentUser?.uid)
+                                      .collection('Mealtracker')
+                                      .doc(document
+                                          .id) // Corrected the way to access the document ID
+                                      .delete();
+                                  Get.back();
+                                },
+                                child: Text('yes')),
+                            TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text('No'))
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 );
               },

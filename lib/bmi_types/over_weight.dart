@@ -2,6 +2,9 @@ import 'package:dieter/Recipe/Dishes.dart';
 import 'package:dieter/Tracking/Exercises.dart';
 import 'package:dieter/fapi/food_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../Recipe/All_Dishes.dart';
 import '__over__weight_state_container.dart';
 
 class Over_Weight extends StatefulWidget {
@@ -97,11 +100,7 @@ class _Over_WeightState extends State<Over_Weight> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Exercises()),
-                                      );
+                                      Get.to(Exercises());
                                     },
                                     child: Text(
                                       'Click Here',
@@ -156,11 +155,7 @@ class _Over_WeightState extends State<Over_Weight> {
                                       shape: OvalBorder()),
                                   child: TextButton(
                                     onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VegetarianDishes()));
+                                      Get.to(VegetarianDishes());
                                     },
                                     child: Text(
                                       'Veg',
@@ -177,7 +172,9 @@ class _Over_WeightState extends State<Over_Weight> {
                                     shape: OvalBorder(),
                                   ),
                                   child: TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.to(AllDishes());
+                                    },
                                     child: Text(
                                       'Non Veg',
                                       style: TextStyle(color: Colors.black),
@@ -266,7 +263,7 @@ class _Over_WeightState extends State<Over_Weight> {
                                 ),
                                 TextButton(
                                     onPressed: () {
-                                      Navigator.push(context,MaterialPageRoute(builder: (context)=>FoodView()));
+                                      Get.to(Exercises());
                                     },
                                     child: Text(
                                       'Click Here',
